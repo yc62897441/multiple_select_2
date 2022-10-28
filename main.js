@@ -2,6 +2,7 @@ const body = document.querySelector('body')
 const select = document.querySelector('select')
 const options = document.querySelectorAll('option')
 const checkboxGroup = document.createElement("div")
+const btnSubmit = document.querySelector('.btn-submit')
 
 options.forEach(option => {
   checkboxGroup.innerHTML += `<label style="display: block;"><input type="checkbox">${option.text}</label>`
@@ -86,4 +87,20 @@ checkboxGroup.addEventListener('input', function (event) {
   if (headOption.text === '') {
     headOption.text = defaultText
   }
+})
+
+// 把勾選的選項傳回後端
+btnSubmit.addEventListener('click', function () {
+  // 如果沒有任何勾選項目，return
+  if (optionsInHeadOption.length < 1) { return }
+  
+  const formData = { selectedOptions: optionsInHeadOption }
+  fetch('url...', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify(formData)
+  })
 })
