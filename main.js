@@ -8,7 +8,7 @@ options.forEach(option => {
   checkboxGroup.innerHTML += `<label style="display: block;"><input type="checkbox">${option.text}</label>`
   option.hidden = true
   option.selected = false
-  option.disabled = true
+  // option.disabled = true
 })
 
 // 建立新元素，當作 select 收合時的顯示選項
@@ -75,6 +75,17 @@ checkboxGroup.addEventListener('input', function (event) {
     optionsInHeadOption.push(inputOptionText)
   }
 
+  // 檢查每個 option，如果 option.text 存在於 optionsInHeadOption(虛擬的checkbox有打勾)，則把該項 option.selected 設為 true
+  // options.forEach(option => {
+  //   if (optionsInHeadOption.includes(option.text)) {
+  //     option.value = option.text
+  //     option.selected = true
+  //   } else {
+  //     option.selected = false
+  //   }
+  // })
+  // 問題點：option.selected = true，則在畫面上無法用 headOption 呈現出多選；另外，form 只能提交一個 selected option(後端req.body: { select: 'Option 3' })
+
   // 把 optionsInHeadOption 中的項目的文字套到 headOption；如果沒有任何項目，則套回 defaultText
   headOption.text = ''
   for (let i = 0; i < optionsInHeadOption.length; i++) {
@@ -87,20 +98,26 @@ checkboxGroup.addEventListener('input', function (event) {
   if (headOption.text === '') {
     headOption.text = defaultText
   }
+
+  // form post 到後端的 select 內容，例如:後端req.body: { select: 'Option 1, Option 3, Option 2' }
+  headOption.value = headOption.text
+  headOption.selected = true
+  headOption.hidden = false
+  headOption.disabled = false
 })
 
 // 把勾選的選項傳回後端
-btnSubmit.addEventListener('click', function () {
-  // 如果沒有任何勾選項目，return
-  if (optionsInHeadOption.length < 1) { return }
+// btnSubmit.addEventListener('click', function () {
+//   // 如果沒有任何勾選項目，return
+//   if (optionsInHeadOption.length < 1) { return }
   
-  const formData = { selectedOptions: optionsInHeadOption }
-  fetch('url...', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: JSON.stringify(formData)
-  })
-})
+//   const formData = { selectedOptions: optionsInHeadOption }
+//   fetch('url...', {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Accept": "application/json",
+//     },
+//     body: JSON.stringify(formData)
+//   })
+// })
